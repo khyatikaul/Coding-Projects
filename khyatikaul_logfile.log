@@ -1,0 +1,488 @@
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\khyat\Downloads\Stata_15.0x64\Stata_15.0x64\khyatikaul_lo
+> gfile.smcl
+  log type:  smcl
+ opened on:  18 Apr 2025, 18:44:32
+
+. cd "C:\Users\khyat\Downloads\MA ECO sem2\trix assignment"
+C:\Users\khyat\Downloads\MA ECO sem2\trix assignment
+
+. pwd
+C:\Users\khyat\Downloads\MA ECO sem2\trix assignment
+
+. use "KHYATI KAUL - Data.dta", clear
+
+. label list
+s118:
+           1 scheduled caste
+           2 scheduled tribe
+           3 other backward class [obc]
+           4 none of them
+           8 dk
+m15:
+          10 homes
+          11 respondents home
+          12 other home
+          13 parent's home
+          20 public sector
+          21 government hospital
+          22 government dispensary
+          23 uhc/uhp/ufwc
+          24 chc/rural hosp/phc
+          25 sub-centre
+          27 other public
+          30 private sector
+          31 private hospital/maternity/clinic
+          36 other private medical
+          41 ngo/trust hospital/clinic
+          96 other
+v715:
+          97 inconsistent
+          98 don't know
+v133:
+          97 inconsistent
+v130:
+           1 hindu
+           2 muslim
+           3 christian
+           4 sikh
+           5 buddhist/neo-buddhist
+           6 jain
+           7 jewish
+           8 parsi/zoroastrian
+           9 no religion
+          10 donyi polo
+          96 other
+v025:
+           1 urban
+           2 rural
+
+. describe
+
+Contains data from KHYATI KAUL - Data.dta
+  obs:        51,555                          
+ vars:             8                          15 Apr 2025 05:15
+ size:     1,134,210                          
+-------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+caseid          str15   %15s                  case identification
+v012            byte    %8.0g                 current age - respondent
+v025            byte    %8.0g      v025       type of place of residence
+v130            byte    %8.0g      v130       religion
+v133            byte    %8.0g      v133       education in single years
+v715            byte    %8.0g      v715       partner's education-single years
+m15             byte    %8.0g      m15        place of delivery
+s118            byte    %8.0g      s118       type of caste or tribe
+-------------------------------------------------------------------------------
+Sorted by: 
+
+. summarize
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      caseid |          0
+        v012 |     51,555    26.78347    5.419279         15         49
+        v025 |     51,555    1.622093    .4848689          1          2
+        v130 |     51,502    2.565143    9.970404          1         96
+        v133 |     51,554    5.067909    5.096027          0         22
+-------------+---------------------------------------------------------
+        v715 |     51,386    7.717919    9.651622          0         98
+         m15 |     51,484    18.08469    8.686279         11         96
+        s118 |     49,593    2.787349    1.130547          1          8
+
+. tab m15, missing
+
+                place of delivery |      Freq.     Percent        Cum.
+----------------------------------+-----------------------------------
+                 respondents home |     24,640       47.79       47.79
+                       other home |        225        0.44       48.23
+                    parent's home |      3,459        6.71       54.94
+              government hospital |      9,822       19.05       73.99
+            government dispensary |        136        0.26       74.25
+                     uhc/uhp/ufwc |         89        0.17       74.43
+               chc/rural hosp/phc |      1,829        3.55       77.97
+                       sub-centre |        112        0.22       78.19
+                     other public |         76        0.15       78.34
+private hospital/maternity/clinic |     10,583       20.53       98.87
+            other private medical |         95        0.18       99.05
+        ngo/trust hospital/clinic |        351        0.68       99.73
+                            other |         67        0.13       99.86
+                                . |         71        0.14      100.00
+----------------------------------+-----------------------------------
+                            Total |     51,555      100.00
+
+. 
+. 
+. 
+. gen inst_del = .
+(51,555 missing values generated)
+
+. 
+. replace inst_del = 1 if inlist(m15, 21, 22, 23, 24, 25, 27, 31, 36, 41)
+(23,093 real changes made)
+
+. 
+. replace inst_del = 0 if inlist(m15, 10, 11, 12, 13, 96)
+(28,391 real changes made)
+
+. 
+. 
+. 
+. label define inst_lbl 1 "Institutional" 0 "Non-institutional"
+
+. 
+. label values inst_del inst_lbl
+
+. 
+. 
+. 
+. tab inst_del
+
+         inst_del |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+Non-institutional |     28,391       55.15       55.15
+    Institutional |     23,093       44.85      100.00
+------------------+-----------------------------------
+            Total |     51,484      100.00
+
+. * QUESTION 2
+
+. * Caste Cross Tab
+
+. 
+. label list s118
+s118:
+           1 scheduled caste
+           2 scheduled tribe
+           3 other backward class [obc]
+           4 none of them
+           8 dk
+
+. 
+. tab s118 inst_del, row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+     type of caste or |       inst_del
+                tribe | Non-insti  Instituti |     Total
+----------------------+----------------------+----------
+      scheduled caste |     5,641      3,508 |     9,149 
+                      |     61.66      38.34 |    100.00 
+----------------------+----------------------+----------
+      scheduled tribe |     6,211      2,159 |     8,370 
+                      |     74.21      25.79 |    100.00 
+----------------------+----------------------+----------
+other backward class  |     9,455      7,273 |    16,728 
+                      |     56.52      43.48 |    100.00 
+----------------------+----------------------+----------
+         none of them |     6,082      8,977 |    15,059 
+                      |     40.39      59.61 |    100.00 
+----------------------+----------------------+----------
+                   dk |        84        133 |       217 
+                      |     38.71      61.29 |    100.00 
+----------------------+----------------------+----------
+                Total |    27,473     22,050 |    49,523 
+                      |     55.48      44.52 |    100.00 
+
+
+. 
+. 
+. 
+. * Residence Cross Tab
+
+. 
+. label list v025
+v025:
+           1 urban
+           2 rural
+
+. 
+. tab v025 inst_del, row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+   type of |
+  place of |       inst_del
+ residence | Non-insti  Instituti |     Total
+-----------+----------------------+----------
+     urban |     6,304     13,151 |    19,455 
+           |     32.40      67.60 |    100.00 
+-----------+----------------------+----------
+     rural |    22,087      9,942 |    32,029 
+           |     68.96      31.04 |    100.00 
+-----------+----------------------+----------
+     Total |    28,391     23,093 |    51,484 
+           |     55.15      44.85 |    100.00 
+
+
+. 
+. 
+. 
+. * Religion Cross Tab
+
+. 
+. label list v130
+v130:
+           1 hindu
+           2 muslim
+           3 christian
+           4 sikh
+           5 buddhist/neo-buddhist
+           6 jain
+           7 jewish
+           8 parsi/zoroastrian
+           9 no religion
+          10 donyi polo
+          96 other
+
+. 
+. tab v130 inst_del, row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+                      |       inst_del
+             religion | Non-insti  Instituti |     Total
+----------------------+----------------------+----------
+                hindu |    19,041     16,411 |    35,452 
+                      |     53.71      46.29 |    100.00 
+----------------------+----------------------+----------
+               muslim |     4,970      3,615 |     8,585 
+                      |     57.89      42.11 |    100.00 
+----------------------+----------------------+----------
+            christian |     3,170      1,886 |     5,056 
+                      |     62.70      37.30 |    100.00 
+----------------------+----------------------+----------
+                 sikh |       362        522 |       884 
+                      |     40.95      59.05 |    100.00 
+----------------------+----------------------+----------
+buddhist/neo-buddhist |       256        302 |       558 
+                      |     45.88      54.12 |    100.00 
+----------------------+----------------------+----------
+                 jain |         5        103 |       108 
+                      |      4.63      95.37 |    100.00 
+----------------------+----------------------+----------
+               jewish |         0          2 |         2 
+                      |      0.00     100.00 |    100.00 
+----------------------+----------------------+----------
+          no religion |        24          9 |        33 
+                      |     72.73      27.27 |    100.00 
+----------------------+----------------------+----------
+           donyi polo |       108         73 |       181 
+                      |     59.67      40.33 |    100.00 
+----------------------+----------------------+----------
+                other |       421        151 |       572 
+                      |     73.60      26.40 |    100.00 
+----------------------+----------------------+----------
+                Total |    28,357     23,074 |    51,431 
+                      |     55.14      44.86 |    100.00 
+
+
+. * Caste dummies
+
+. 
+. gen caste_sc = s118 == 1
+
+. 
+. gen caste_st = s118 == 2
+
+. 
+. gen caste_obc = s118 == 3
+
+. 
+. * Ref group = "None of them" (s118 == 4)
+
+. 
+. 
+. 
+. * Residence dummy
+
+. 
+. gen urban = v025 == 1
+
+. 
+. * Ref group = Rural (v025 == 2)
+
+. 
+. 
+. 
+. * Religion dummies
+
+. 
+. gen rel_hindu = v130 == 1
+
+. 
+. gen rel_muslim = v130 == 2
+
+. 
+. gen rel_christian = v130 == 3
+
+. 
+. * Ref group = all others (e.g. v130 == 4, 5,... or 96)
+
+. * Final logit regression
+
+. 
+. logit inst_del v012 v133 v715 caste_sc caste_st caste_obc urban rel_hindu rel
+> _muslim rel_christian
+
+Iteration 0:   log likelihood = -35297.995  
+Iteration 1:   log likelihood = -26684.005  
+Iteration 2:   log likelihood =  -26652.63  
+Iteration 3:   log likelihood = -26652.578  
+Iteration 4:   log likelihood = -26652.578  
+
+Logistic regression                             Number of obs     =     51,318
+                                                LR chi2(10)       =   17290.83
+                                                Prob > chi2       =     0.0000
+Log likelihood = -26652.578                     Pseudo R2         =     0.2449
+
+------------------------------------------------------------------------------
+    inst_del |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        v012 |  -.0102411   .0020469    -5.00   0.000     -.014253   -.0062293
+        v133 |   .1993545   .0025134    79.32   0.000     .1944283    .2042808
+        v715 |   .0040101   .0011236     3.57   0.000     .0018079    .0062124
+    caste_sc |  -.4176078   .0326036   -12.81   0.000    -.4815096   -.3537059
+    caste_st |   -.955484   .0419317   -22.79   0.000    -1.037669   -.8732993
+   caste_obc |  -.2646379   .0266647    -9.92   0.000    -.3168998    -.212376
+       urban |   1.122672   .0223637    50.20   0.000      1.07884    1.166504
+   rel_hindu |  -.2863176   .0533212    -5.37   0.000    -.3908253     -.18181
+  rel_muslim |  -.5323088   .0590416    -9.02   0.000    -.6480283   -.4165894
+rel_christ~n |  -.5001042   .0641461    -7.80   0.000    -.6258283   -.3743801
+       _cons |  -.7703311    .080027    -9.63   0.000    -.9271811    -.613481
+------------------------------------------------------------------------------
+
+. * Marginal Effects
+
+. 
+. margins, dydx(*)
+
+Average marginal effects                        Number of obs     =     51,318
+Model VCE    : OIM
+
+Expression   : Pr(inst_del), predict()
+dy/dx w.r.t. : v012 v133 v715 caste_sc caste_st caste_obc urban rel_hindu
+               rel_muslim rel_christian
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        v012 |   -.001761   .0003517    -5.01   0.000    -.0024503   -.0010718
+        v133 |   .0342804   .0003282   104.45   0.000     .0336371    .0349237
+        v715 |   .0006896   .0001931     3.57   0.000      .000311    .0010681
+    caste_sc |  -.0718106   .0055773   -12.88   0.000    -.0827419   -.0608792
+    caste_st |  -.1643021    .007099   -23.14   0.000    -.1782158   -.1503883
+   caste_obc |  -.0455063   .0045706    -9.96   0.000    -.0544645   -.0365482
+       urban |   .1930512   .0035172    54.89   0.000     .1861576    .1999449
+   rel_hindu |  -.0492343   .0091609    -5.37   0.000    -.0671893   -.0312793
+  rel_muslim |  -.0915342   .0101269    -9.04   0.000    -.1113826   -.0716858
+rel_christ~n |  -.0859964   .0110076    -7.81   0.000    -.1075709   -.0644218
+------------------------------------------------------------------------------
+
+. * Run tests of significance after regression
+
+. 
+. test v133 = v715                      // Mother's edu vs. Father's edu
+v715/ invalid name
+r(198);
+
+. 
+. test rel_muslim = rel_christian      // Muslim vs. Christian
+rel_christian/ invalid name
+r(198);
+
+. 
+. test caste_obc = caste_sc            // OBC vs. SC
+caste_sc/ invalid name
+r(198);
+
+. 
+. test caste_sc caste_st caste_obc     // Joint test: Is caste significant over
+> all?
+Joint not found
+r(111);
+
+. * Mother vs Father education
+
+. test v133 = v715
+
+ ( 1)  [inst_del]v133 - [inst_del]v715 = 0
+
+           chi2(  1) = 4331.40
+         Prob > chi2 =    0.0000
+
+. * checking for religion Muslim = Christian
+
+. test 2.v130 = 3.v130
+variable v130 not found
+r(111);
+
+. marginsplot, ytitle("Average Marginal Effects") title("Institutional Delivery
+>  - Marginal Effects")
+previous command was not margins
+r(301);
+
+. margins, dydx(*)
+
+Average marginal effects                        Number of obs     =     51,318
+Model VCE    : OIM
+
+Expression   : Pr(inst_del), predict()
+dy/dx w.r.t. : v012 v133 v715 caste_sc caste_st caste_obc urban rel_hindu
+               rel_muslim rel_christian
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        v012 |   -.001761   .0003517    -5.01   0.000    -.0024503   -.0010718
+        v133 |   .0342804   .0003282   104.45   0.000     .0336371    .0349237
+        v715 |   .0006896   .0001931     3.57   0.000      .000311    .0010681
+    caste_sc |  -.0718106   .0055773   -12.88   0.000    -.0827419   -.0608792
+    caste_st |  -.1643021    .007099   -23.14   0.000    -.1782158   -.1503883
+   caste_obc |  -.0455063   .0045706    -9.96   0.000    -.0544645   -.0365482
+       urban |   .1930512   .0035172    54.89   0.000     .1861576    .1999449
+   rel_hindu |  -.0492343   .0091609    -5.37   0.000    -.0671893   -.0312793
+  rel_muslim |  -.0915342   .0101269    -9.04   0.000    -.1113826   -.0716858
+rel_christ~n |  -.0859964   .0110076    -7.81   0.000    -.1075709   -.0644218
+------------------------------------------------------------------------------
+
+. 
+. marginsplot, ytitle("Average Marginal Effects") title("Institutional Delivery
+>  - Marginal Effects")
+
+  Variables that uniquely identify margins: _deriv
+
+. graph export "C:\Users\khyat\Downloads\MA ECO sem2\trix assignment\Graph.png"
+> , as(png) replace
+(note: file C:\Users\khyat\Downloads\MA ECO sem2\trix assignment\Graph.png not 
+> found)
+(file C:\Users\khyat\Downloads\MA ECO sem2\trix assignment\Graph.png written in
+>  PNG format)
+
+. log close
+      name:  <unnamed>
+       log:  C:\Users\khyat\Downloads\Stata_15.0x64\Stata_15.0x64\khyatikaul_lo
+> gfile.smcl
+  log type:  smcl
+ closed on:  18 Apr 2025, 19:09:07
+-------------------------------------------------------------------------------
